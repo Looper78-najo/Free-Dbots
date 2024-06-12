@@ -1,0 +1,111 @@
+<xml xmlns="https://developers.google.com/blockly/xml">
+  <variables>
+    <variable type="" id="time">time</variable>
+    <variable type="" id="price">price</variable>
+    <variable type="" id="short_ma">short_ma</variable>
+    <variable type="" id="long_ma">long_ma</variable>
+  </variables>
+  <block type="trade_definition" id="trade_definition" x="10" y="10">
+    <field name="MARKET">synthetic_index</field>
+    <field name="TYPE">volatility_100</field>
+    <field name="DURATION_UNIT">t</field>
+    <field name="DURATION">5</field>
+    <field name="CONTRACT_TYPE">both</field>
+    <statement name="BOT">
+      <block type="trade_again" id="trade_again">
+        <statement name="SUB_STACK">
+          <block type="controls_if" id="if_condition">
+            <value name="IF0">
+              <block type="logic_compare" id="compare_ma">
+                <field name="OP">GT</field>
+                <value name="A">
+                  <block type="technical_indicator" id="short_ma_value">
+                    <field name="INDICATOR">moving_average</field>
+                    <value name="INPUT">
+                      <block type="input_list" id="input_list_short">
+                        <mutation items="1"></mutation>
+                        <value name="ADD0">
+                          <block type="input_value" id="input_value_ohlc">
+                            <field name="OHLC">close</field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <field name="PERIOD">5</field>
+                  </block>
+                </value>
+                <value name="B">
+                  <block type="technical_indicator" id="long_ma_value">
+                    <field name="INDICATOR">moving_average</field>
+                    <value name="INPUT">
+                      <block type="input_list" id="input_list_long">
+                        <mutation items="1"></mutation>
+                        <value name="ADD0">
+                          <block type="input_value" id="input_value_ohlc">
+                            <field name="OHLC">close</field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <field name="PERIOD">20</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+            <statement name="DO0">
+              <block type="trade" id="trade_rise">
+                <field name="CONTRACT_TYPE">call</field>
+              </block>
+            </statement>
+            <next>
+              <block type="controls_if" id="if_condition_fall">
+                <value name="IF0">
+                  <block type="logic_compare" id="compare_ma_fall">
+                    <field name="OP">LT</field>
+                    <value name="A">
+                      <block type="technical_indicator" id="short_ma_value_fall">
+                        <field name="INDICATOR">moving_average</field>
+                        <value name="INPUT">
+                          <block type="input_list" id="input_list_short_fall">
+                            <mutation items="1"></mutation>
+                            <value name="ADD0">
+                              <block type="input_value" id="input_value_ohlc_fall">
+                                <field name="OHLC">close</field>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                        <field name="PERIOD">5</field>
+                      </block>
+                    </value>
+                    <value name="B">
+                      <block type="technical_indicator" id="long_ma_value_fall">
+                        <field name="INDICATOR">moving_average</field>
+                        <value name="INPUT">
+                          <block type="input_list" id="input_list_long_fall">
+                            <mutation items="1"></mutation>
+                            <value name="ADD0">
+                              <block type="input_value" id="input_value_ohlc_fall">
+                                <field name="OHLC">close</field>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                        <field name="PERIOD">20</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+                <statement name="DO0">
+                  <block type="trade" id="trade_fall">
+                    <field name="CONTRACT_TYPE">put</field>
+                  </block>
+                </statement>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </statement>
+  </block>
+</xml>
